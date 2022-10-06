@@ -33,13 +33,13 @@ CPTBase.AddConVar("cpt_debug_cancreategraph",0)
 CPTBase.AddConVar("cpt_aiusecustomnodes",0)
 CPTBase.AddConVar("cpt_aidifficulty",2) -- 1 = Easy, 2 = Normal, 3 = Hard, 4 = Hell
 
-game.AddAmmoType({name="9×19mm",dmgtype=DMG_BULLET})
+--[[ game.AddAmmoType({name="9×19mm",dmgtype=DMG_BULLET})
 game.AddAmmoType({name="5.7×28mm",dmgtype=DMG_BULLET})
 game.AddAmmoType({name="5.56×45mm",dmgtype=DMG_BULLET})
-game.AddAmmoType({name="darkpulseenergy",dmgtype=DMG_DISSOLVE})
+game.AddAmmoType({name="darkpulseenergy",dmgtype=DMG_DISSOLVE}) ]]--
 game.AddAmmoType({name="defaultammo",dmgtype=DMG_BULLET})
 
-function CPTBase_Chat(ply,spoke)
+--[[ function CPTBase_Chat(ply,spoke)
 	local lowered = string.lower(spoke)
 	if (ply:IsAdmin() or ply:IsSuperAdmin()) && (string.sub(lowered,1,11) == "!setfaction") then
 		local in_faction = string.sub(string.upper(spoke),13)
@@ -48,7 +48,7 @@ function CPTBase_Chat(ply,spoke)
 		ply:ChatPrint("Set faction to " .. in_faction)
 	end
 end
-hook.Add("PlayerSay","CPTBase_Chat",CPTBase_Chat)
+hook.Add("PlayerSay","CPTBase_Chat",CPTBase_Chat) ]]--
 
 -- hook.Add("PlayerDeath","CPTBase_DeathData",function(ply)
 	-- for _,v in ipairs(ents.GetAll()) do
@@ -85,8 +85,8 @@ hook.Add("PlayerSpawn","CPTBase_AddDefaultPlayerValues",function(ply)
 	ply.CPTBase_Ragdoll = NULL
 	ply.CPTBase_HasBeenRagdolled = false
 	ply.LastRagdollMoveT = CurTime()
-	ply.CPTBase_TotalDrinks = 0
-	ply.CPTBase_TimeSinceLastPotionDrink = CurTime()
+--	ply.CPTBase_TotalDrinks = 0
+--	ply.CPTBase_TimeSinceLastPotionDrink = CurTime()
 	ply.CPTBase_CurrentSoundtrack = nil
 	ply.CPTBase_CurrentSoundtrackDir = nil
 	ply.CPTBase_CurrentSoundtrackNPC = NULL
@@ -98,23 +98,23 @@ hook.Add("PlayerSpawn","CPTBase_AddDefaultPlayerValues",function(ply)
 	ply:SetNWBool("CPTBase_IsPossessing",false)
 	ply:SetNWString("CPTBase_PossessedNPCClass",nil)
 	ply:SetNWEntity("CPTBase_PossessedNPC",NULL)
-	ply:SetNWInt("CPTBase_Magicka",100)
+--[[	ply:SetNWInt("CPTBase_Magicka",100)
 	ply:SetNWInt("CPTBase_MaxMagicka",100)
 	ply:SetNWInt("CPTBase_NextMagickaT",5)
-	ply:SetNWString("CPTBase_SpellConjuration","npc_cpt_parasite")
+	ply:SetNWString("CPTBase_SpellConjuration","npc_cpt_parasite") ]]--
 end)
 
 if SERVER then
 	hook.Add("Think","CPTBase_PlayerRagdolling",function()
 		for _,v in ipairs(player.GetAll()) do
 			v:UpdateNPCFaction()
-			if v:GetNWInt("CPTBase_Magicka") < v:GetNWInt("CPTBase_MaxMagicka") && CurTime() > v:GetNWInt("CPTBase_NextMagickaT") then
+		--[[	if v:GetNWInt("CPTBase_Magicka") < v:GetNWInt("CPTBase_MaxMagicka") && CurTime() > v:GetNWInt("CPTBase_NextMagickaT") then
 				v:SetNWInt("CPTBase_Magicka",v:GetNWInt("CPTBase_Magicka") +1)
 				if v:GetNWInt("CPTBase_Magicka") > v:GetNWInt("CPTBase_MaxMagicka") then
 					v:SetNWInt("CPTBase_Magicka",v:GetNWInt("CPTBase_MaxMagicka"))
 				end
 				v:SetNWInt("CPTBase_NextMagickaT",CurTime() +1)
-			end
+			end ]]--
 			if IsValid(v) && v.CPTBase_HasBeenRagdolled then
 				if IsValid(v:GetCPTBaseRagdoll()) then
 					-- v:GodEnable()
@@ -166,7 +166,7 @@ if SERVER then
 	end)
 end
 
-if CLIENT then
+--[[ if CLIENT then
 	hook.Add("PlayerStartVoice","CPTBase_SetVoiceData",function(ply)
 		for _,v in ipairs(ents.GetAll()) do
 			if v:IsValid() && v:IsNPC() && v:GetNWBool("IsCPTBase_NPC") then
@@ -177,4 +177,4 @@ if CLIENT then
 			end
 		end
 	end)
-end
+end ]]--

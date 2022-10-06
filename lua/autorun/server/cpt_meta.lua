@@ -792,7 +792,7 @@ function NPC_Meta:SetClearPos(origin) // Credits to Silverlan
 	self:SetPos(pos)
 end
 
-hook.Add("Think","CPTBase_MutationEffects",function()
+--[[ hook.Add("Think","CPTBase_MutationEffects",function()
 	for _,v in ipairs(ents.GetAll()) do
 		if v:IsNPC() && v.CPTBase_NPC == true then
 			if v.HasMutated == true then
@@ -809,7 +809,7 @@ hook.Add("Think","CPTBase_MutationEffects",function()
 			end
 		end
 	end
-end)
+end) ]]--
 
 function NPC_Meta:DoCustomTrace_Mask(enter,exit,mask,filt)
 	local tracedata = {}

@@ -44,7 +44,7 @@ CPTBase = {
 		game.AddParticles(cptDir)
 		local particlename = cptList
 		for _,v in ipairs(particlename) do PrecacheParticleSystem(v) end
-		MsgN("Adding CPTBase particle system " .. cptDir)
+		-- MsgN("Adding CPTBase particle system " .. cptDir)
 	end,
 	RegisterMod = function(cptName,cptVersion)
 		if tbl_cptMods == nil then
@@ -88,7 +88,7 @@ CPTBase = {
 				killicon.Add("#" .. cptClass,cptOnCeiling,Color(255,255,255,255))
 			end
 		end
-		MsgN("Adding CPTBase NPC " .. cptName .. " [" .. cptClass .. "] to spawnmenu category [" .. cptCat .. "]")
+		-- MsgN("Adding CPTBase NPC " .. cptName .. " [" .. cptClass .. "] to spawnmenu category [" .. cptCat .. "]")
 	end,
 	AddAdminNPC = function(cptName,cptClass,cptCat,cptOnCeiling,cptOnFloor)
 		local kill = false
@@ -110,7 +110,7 @@ CPTBase = {
 				killicon.Add("#" .. cptClass,cptOnCeiling,Color(255,255,255,255))
 			end
 		end
-		MsgN("Adding (Admin-Only) CPTBase NPC " .. cptName .. " [" .. cptClass .. "] to spawnmenu category [" .. cptCat .. "]")
+		-- MsgN("Adding (Admin-Only) CPTBase NPC " .. cptName .. " [" .. cptClass .. "] to spawnmenu category [" .. cptCat .. "]")
 	end,
 	AddHumanNPC = function(cptName,cptClass,cptCat,cptWeapons)
 		local NPC = {Name = cptName, Class = cptClass, Category = cptCat, Weapons = cptWeapons}
