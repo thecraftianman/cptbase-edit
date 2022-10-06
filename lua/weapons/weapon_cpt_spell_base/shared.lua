@@ -16,8 +16,8 @@ SWEP.ViewModel		= "models/cpthazama/cptbase/spell.mdl"
 SWEP.WorldModel		= ""
 SWEP.HoldType = "normal"
 SWEP.Base = "weapon_cpt_base"
-SWEP.AdminSpawnable = true
-SWEP.Spawnable = true
+SWEP.AdminSpawnable = false
+SWEP.Spawnable = false
 SWEP.UseHands = true
 
 SWEP.DrawTime = false

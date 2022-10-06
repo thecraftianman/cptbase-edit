@@ -5,7 +5,7 @@ SWEP.Author = "Cpt. Hazama"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 SWEP.Instructions = ""
-SWEP.Category = "CPTBase"
+SWEP.Category = "Other"
 
 if (CLIENT) then
 	SWEP.Slot = 5

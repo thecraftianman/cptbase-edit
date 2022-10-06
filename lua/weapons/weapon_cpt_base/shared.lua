@@ -3,6 +3,7 @@ if !CPTBase then return end
 AddCSLuaFile("ai_translations.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("viewmodel.lua")
+AddCSLuaFile("sh_anim.lua")
 include("ai_translations.lua")
 -- include("viewmodel.lua")
 include("sh_anim.lua")
