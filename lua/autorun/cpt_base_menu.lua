@@ -1,8 +1,8 @@
-/*--------------------------------------------------
+--[[--------------------------------------------------
 	Copyright (c) 2019 by Cpt. Hazama, All rights reserved.
 	Nothing in these files or/and code may be reproduced, adapted, merged or
 	modified without prior written consent of the original author, Cpt. Hazama
---------------------------------------------------*/
+--------------------------------------------------]]--
 CPTBase.AddConVar("cpt_bot_seeenemies","0")
 CPTBase.AddConVar("cpt_bot_chat","1")
 CPTBase.AddConVar("cpt_aiusenavmesh","0")
@@ -14,9 +14,9 @@ CPTBase.AddClientVar("cpt_allowmusic","1",false)
 -- CPTBase.AddConVar("cpt_bot_custommodel","models/player/kleiner.mdl")
 CPTBase.AddClientVar("cpt_usetracemovement","0",true)
 
-if (CLIENT) then
+if CLIENT then
 	local function CPTBaseMenu_SNPC(panel)
-		if !game.SinglePlayer() then
+		if not game.SinglePlayer() then
 			if !LocalPlayer():IsAdmin() or !LocalPlayer():IsSuperAdmin() then
 				panel:AddControl("Label",{Text = "Only Admins Can Access These Settings!"})
 				panel:AddControl("CheckBox",{ Label = "Allow Soundtrack?",Command = "cpt_allowmusic"})
@@ -52,7 +52,7 @@ if (CLIENT) then
 		panel:AddControl("Label",{Text = "Cpt. Hazama"})
 	end
 	function CPTBaseMenu_Add()
-		spawnmenu.AddToolMenuOption("CPTBase","SNPC Settings","AI Settings","AI Settings","","",CPTBaseMenu_SNPC) -- Tab, Dropdown, Select, Title
+		spawnmenu.AddToolMenuOption("Options","CPTBase","SNPC AI Settings","SNPC AI Settings","","",CPTBaseMenu_SNPC) -- Tab, Dropdown, Select, Title
 	end
 	hook.Add("PopulateToolMenu","CPTBaseMenu_Add",CPTBaseMenu_Add)
 end

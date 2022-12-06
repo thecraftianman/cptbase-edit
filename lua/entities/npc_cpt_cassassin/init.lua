@@ -2,10 +2,10 @@ if !CPTBase then return end
 AddCSLuaFile('shared.lua')
 include('shared.lua')
 
-BACK = ACT_HL2MP_JUMP_SMG1
-FORWARD = ACT_HL2MP_JUMP_AR2
-LEFT = ACT_HL2MP_JUMP
-RIGHT = ACT_HL2MP_JUMP_PISTOL
+local BACK = ACT_HL2MP_JUMP_SMG1
+local FORWARD = ACT_HL2MP_JUMP_AR2
+local LEFT = ACT_HL2MP_JUMP
+local RIGHT = ACT_HL2MP_JUMP_PISTOL
 
 ENT.ModelTable = {"models/cpthazama/fassassin.mdl"}
 ENT.StartHealth = 70
@@ -290,6 +290,7 @@ end
 function ENT:Possess_Jump(possessor)
 	if CurTime() > self.NextJumpT && self.IsDodging == false then
 		self:StopCompletely()
+		local animtime
 		if possessor:KeyDown(IN_MOVELEFT) then
 			self:PlayActivity(LEFT,0)
 			animtime = self:AnimationLength(LEFT)
@@ -309,7 +310,7 @@ function ENT:Possess_Jump(possessor)
 		self.IsDodging = true
 		self.IsRangeAttacking = true
 		timer.Simple(animtime,function() if self:IsValid() then self.IsRangeAttacking = false self.IsDodging = false end end)
-		self.NextJumpT = CurTime() +animtime +math.Rand(0,1.5)
+		self.NextJumpT = CurTime() + animtime + math.Rand(0,1.5)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------

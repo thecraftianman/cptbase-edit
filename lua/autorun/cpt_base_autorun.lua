@@ -1,23 +1,23 @@
-/*--------------------------------------------------
+--[[--------------------------------------------------
 	Copyright (c) 2019 by Cpt. Hazama, All rights reserved.
 	Nothing in these files or/and code may be reproduced, adapted, merged or
 	modified without prior written consent of the original author, Cpt. Hazama
---------------------------------------------------*/
+--------------------------------------------------]]--
 AddCSLuaFile('server/cpt_utilities.lua')
 include('server/cpt_utilities.lua')
 
 -- CPTBase.AddAddon("cptbase","54")
 
-// Bots
+-- Bots
 CPTBase.AddNPC("Player Bot","npc_cpt_bot","CPTBase Redux")
 
-// Combine
+-- Combine
 CPTBase.AddNPC("Combine Assasssin","npc_cpt_cassassin","CPTBase Redux")
 CPTBase.AddNPC("Cremator","npc_cpt_cremator","CPTBase Redux")
 CPTBase.AddNPC("Mortar Synth","npc_cpt_mortarsynth","CPTBase Redux")
 CPTBase.AddNPC("Combine Soldier","npc_cpt_csoldier","CPTBase Redux")
 
-// Zombies + Enemy Aliens
+-- Zombies + Enemy Aliens
 CPTBase.AddNPC("Parasite","npc_cpt_parasite","CPTBase Redux")
 CPTBase.AddNPC("Puker Zombie","npc_cpt_pukerzombie","CPTBase Redux")
 CPTBase.AddNPC("Infectious Zombie","npc_cpt_scientistzombie","CPTBase Redux")
@@ -33,9 +33,9 @@ CPTBase.AddConVar("cpt_debug_cancreategraph",0)
 CPTBase.AddConVar("cpt_aiusecustomnodes",0)
 CPTBase.AddConVar("cpt_aidifficulty",2) -- 1 = Easy, 2 = Normal, 3 = Hard, 4 = Hell
 
---[[ game.AddAmmoType({name="9×19mm",dmgtype=DMG_BULLET})
-game.AddAmmoType({name="5.7×28mm",dmgtype=DMG_BULLET})
-game.AddAmmoType({name="5.56×45mm",dmgtype=DMG_BULLET})
+--[[ game.AddAmmoType({name="9Ãƒâ€”19mm",dmgtype=DMG_BULLET})
+game.AddAmmoType({name="5.7Ãƒâ€”28mm",dmgtype=DMG_BULLET})
+game.AddAmmoType({name="5.56Ãƒâ€”45mm",dmgtype=DMG_BULLET})
 game.AddAmmoType({name="darkpulseenergy",dmgtype=DMG_DISSOLVE}) ]]--
 game.AddAmmoType({name="defaultammo",dmgtype=DMG_BULLET})
 
@@ -58,113 +58,6 @@ hook.Add("PlayerSay","CPTBase_Chat",CPTBase_Chat) ]]--
 		-- end
 	-- end
 -- end)
-
-hook.Add("PlayerSpawn","CPTBase_StopIgnition",function(ply)
-	timer.Simple(0.02,function()
-		if IsValid(ply) then
-			if ply:IsOnFire() then
-				ply:Extinguish()
-			end
-		end
-	end)
-end)
-
-hook.Add("InitialPlayerSpawn","CPTBase_AddDefaultInitialPlayerValues",function(ply)
-	ply:SetNWBool("CPTBase_IsPossessing",false)
-end)
-
-hook.Add("PlayerSpawn","CPTBase_AddDefaultPlayerValues",function(ply)
-	ply.IsPossessing = false
-	ply.CPTBase_EF_RAD = 0
-	ply.CPTBase_ExperiencingEFDamage_RAD = false
-	ply.CPTBase_ExperiencingEFDamage_POI = false
-	ply.CPTBase_ExperiencingEFDamage_AFTERBURN = false
-	ply.CPTBase_ExperiencingEFDamage_FROST = false
-	ply.CPTBase_ExperiencingEFDamage_DE = false
-	ply.CPTBase_ExperiencingEFDamage_ELEC = false
-	ply.CPTBase_Ragdoll = NULL
-	ply.CPTBase_HasBeenRagdolled = false
-	ply.LastRagdollMoveT = CurTime()
---	ply.CPTBase_TotalDrinks = 0
---	ply.CPTBase_TimeSinceLastPotionDrink = CurTime()
-	ply.CPTBase_CurrentSoundtrack = nil
-	ply.CPTBase_CurrentSoundtrackDir = nil
-	ply.CPTBase_CurrentSoundtrackNPC = NULL
-	ply.CPTBase_CurrentSoundtrackTime = 0
-	ply.CPTBase_CurrentSoundtrackRestartTime = 0
-	if ply:GetNWString("CPTBase_NPCFaction") == nil then
-		ply:SetNWString("CPTBase_NPCFaction","FACTION_PLAYER")
-	end
-	ply:SetNWBool("CPTBase_IsPossessing",false)
-	ply:SetNWString("CPTBase_PossessedNPCClass",nil)
-	ply:SetNWEntity("CPTBase_PossessedNPC",NULL)
---[[	ply:SetNWInt("CPTBase_Magicka",100)
-	ply:SetNWInt("CPTBase_MaxMagicka",100)
-	ply:SetNWInt("CPTBase_NextMagickaT",5)
-	ply:SetNWString("CPTBase_SpellConjuration","npc_cpt_parasite") ]]--
-end)
-
-if SERVER then
-	hook.Add("Think","CPTBase_PlayerRagdolling",function()
-		for _,v in ipairs(player.GetAll()) do
-			v:UpdateNPCFaction()
-		--[[	if v:GetNWInt("CPTBase_Magicka") < v:GetNWInt("CPTBase_MaxMagicka") && CurTime() > v:GetNWInt("CPTBase_NextMagickaT") then
-				v:SetNWInt("CPTBase_Magicka",v:GetNWInt("CPTBase_Magicka") +1)
-				if v:GetNWInt("CPTBase_Magicka") > v:GetNWInt("CPTBase_MaxMagicka") then
-					v:SetNWInt("CPTBase_Magicka",v:GetNWInt("CPTBase_MaxMagicka"))
-				end
-				v:SetNWInt("CPTBase_NextMagickaT",CurTime() +1)
-			end ]]--
-			if IsValid(v) && v.CPTBase_HasBeenRagdolled then
-				if IsValid(v:GetCPTBaseRagdoll()) then
-					-- v:GodEnable()
-					v:GodDisable()
-					v:StripWeapons()
-					v:Spectate(OBS_MODE_CHASE)
-					v:SpectateEntity(v:GetCPTBaseRagdoll())
-					v:SetMoveType(MOVETYPE_OBSERVER)
-					v:SetPos(v:GetCPTBaseRagdoll():GetPos())
-					if v:GetCPTBaseRagdoll():GetVelocity():Length() > 10 then
-						v.LastRagdollMoveT = CurTime() +5
-					end
-					if v:KeyReleased(IN_FORWARD) then
-						v.LastRagdollMoveT = v.LastRagdollMoveT -0.6
-					end
-					if CurTime() > v.LastRagdollMoveT then
-						v:CPTBaseUnRagdoll()
-						-- v:GodDisable()
-					end
-				end
-			end
-		end
-	end)
-
-	hook.Add("PlayerDeath","CPTBase_PlayerRagdollingDeath",function(v,inflictor,attacker)
-		if v.CPTBase_HasBeenRagdolled && IsValid(v:GetCPTBaseRagdoll()) then
-			if IsValid(v:GetRagdollEntity()) then
-				local ent = v:GetCPTBaseRagdoll()
-				local rag = v:GetRagdollEntity()
-				rag:SetPos(ent:GetPos())
-				rag:SetAngles(ent:GetAngles())
-				if ent:IsOnFire() then
-					rag:Ignite(math.random(8,10),1)
-				end
-				rag:SetVelocity(ent:GetVelocity())
-				for i = 1,128 do
-					local bonephys = rag:GetPhysicsObjectNum(i)
-					if IsValid(bonephys) then
-						local bonepos,boneang = ent:GetBonePosition(rag:TranslatePhysBoneToBone(i))
-						if(bonepos) then
-							bonephys:SetPos(bonepos)
-							bonephys:SetAngles(boneang)
-						end
-					end
-				end
-			end
-			v:GetCPTBaseRagdoll():Remove()
-		end
-	end)
-end
 
 --[[ if CLIENT then
 	hook.Add("PlayerStartVoice","CPTBase_SetVoiceData",function(ply)

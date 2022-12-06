@@ -26,10 +26,8 @@ CPTBase = {
 	end,
 	IsAddonUpdated = function(addonID,desiredV)
 		local isUpdated = false
-		if CPTBase_Addons[addonID] then
-			if CPTBase_Addons[addonID] == desiredV then
-				isUpdated = true
-			end
+		if CPTBase_Addons[addonID] and CPTBase_Addons[addonID] == desiredV then
+			isUpdated = true
 		end
 		if isUpdated == false then
 			for _,v in ipairs(player.GetAll()) do
@@ -66,7 +64,7 @@ CPTBase = {
 	end,
 	DefineDecal = function(cptName,cptTbl)
 		game.AddDecal(cptName,cptTbl)
-		MsgN("Defining CPTBase decal system " .. cptName)
+		-- MsgN("Defining CPTBase decal system " .. cptName)
 	end,
 	AddNPC = function(cptName,cptClass,cptCat,cptOnCeiling,cptOnFloor)
 		local kill = false
@@ -126,11 +124,11 @@ CPTBase = {
 	end,
 	AddConVar = function(cvName,cvVal)
 		CreateConVar(cvName,cvVal,{FCVAR_NONE})
-		MsgN("Registering CPTBase ConVar " .. cvName .. " with default value " .. cvVal)
+		-- MsgN("Registering CPTBase ConVar " .. cvName .. " with default value " .. cvVal)
 	end,
 	AddClientVar = function(cvName,cvVal,cvSendData)
 		CreateClientConVar(cvName,cvVal,cvSendData,false)
-		MsgN("Registering CPTBase Client ConVar " .. cvName .. " with default value " .. cvVal)
+		-- MsgN("Registering CPTBase Client ConVar " .. cvName .. " with default value " .. cvVal)
 	end,
 	AddPlayerModel = function(cptName,cptModel,cptArms,cptSkin,cptBodygroup)
 		player_manager.AddValidModel(cptName,cptModel)
@@ -139,7 +137,7 @@ CPTBase = {
 		MsgN("Registering CPTBase player model " .. cptName)
 	end,
 	AddAmmo = function(cptName,cptClass,cptAmmo,cptDamageType)
-		game.AddAmmoType({name=cptAmmo,dmgtype=cptDamageType})
+		game.AddAmmoType({name = cptAmmo, dmgtype = cptDamageType})
 		if cptName == nil then return end
 		if (CLIENT) then
 			language.Add(cptClass,cptName)
@@ -176,7 +174,7 @@ CPTBase = {
 }
 
 	-- Addon Keys --
-if game.SinglePlayer() then
+--[[ if game.SinglePlayer() then
 	keyGivenFO4 = {
 		[1] = "Raven",
 		[2] = "sherkboi10",
@@ -204,4 +202,4 @@ else
 		[10] = "STEAM_0:0:38270154", // Me
 		[00010083] = "U71K-17AS-PT49W"
 	}
-end
+end ]]

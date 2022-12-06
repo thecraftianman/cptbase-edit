@@ -1,18 +1,10 @@
-if !CPTBase then return end
-if !CLIENT then return end
+if not CPTBase then return end
+if not CLIENT then return end
 -------------------------------------------------------------------------------------------------------------------
 local ENT_Meta = FindMetaTable("Entity")
 local NPC_Meta = FindMetaTable("NPC")
 local PLY_Meta = FindMetaTable("Player")
 local WPN_Meta = FindMetaTable("Weapon")
-
-function FindLuaFile(luadir)
-	return file.Exists(luadir,"LUA")
-end
-
-function FindGameFile(filedir)
-	return file.Exists(filedir,"GAME")
-end
 
 function NPC_Meta:CreateThemeSong(track,len)
 	for _,v in ipairs(player.GetAll()) do
@@ -65,28 +57,30 @@ function NPC_Meta:StopAllThemeSongs()
 end
 
 hook.Add("Think","CPTBase_ThemeSystemThink",function()
-	if LocalPlayer().CPTBase_CurrentSoundtrack != nil then
-		if !IsValid(LocalPlayer().CPTBase_CurrentSoundtrackNPC) then
-			LocalPlayer().CPTBase_CurrentSoundtrack:FadeOut(0.5)
-			LocalPlayer().CPTBase_CurrentSoundtrack = nil
-			LocalPlayer().CPTBase_CurrentSoundtrackDir = nil
-			LocalPlayer().CPTBase_CurrentSoundtrackTime = nil
-			LocalPlayer().CPTBase_CurrentSoundtrackRestartTime = nil
-		end
-		if LocalPlayer().CPTBase_CurrentSoundtrack != nil && RealTime() > LocalPlayer().CPTBase_CurrentSoundtrackTime then
-			LocalPlayer().CPTBase_CurrentSoundtrack:FadeOut(2)
-			local prevNPC = LocalPlayer().CPTBase_CurrentSoundtrackNPC
-			timer.Simple(2,function()
-				if IsValid(LocalPlayer()) then
-					if IsValid(LocalPlayer().CPTBase_CurrentSoundtrackNPC) && prevNPC == LocalPlayer().CPTBase_CurrentSoundtrackNPC then
-						LocalPlayer().CPTBase_CurrentSoundtrack:Stop()
-						LocalPlayer().CPTBase_CurrentSoundtrack = CreateSound(LocalPlayer(),LocalPlayer().CPTBase_CurrentSoundtrackDir)
-						LocalPlayer().CPTBase_CurrentSoundtrack:SetSoundLevel(0.2)
-						LocalPlayer().CPTBase_CurrentSoundtrack:Play()
-					end
+	local locPly = LocalPlayer()
+
+	if locPly.CPTBase_CurrentSoundtrack == nil then return end
+	if not IsValid(locPly.CPTBase_CurrentSoundtrackNPC) then
+		locPly.CPTBase_CurrentSoundtrack:FadeOut(0.5)
+		locPly.CPTBase_CurrentSoundtrack = nil
+		locPly.CPTBase_CurrentSoundtrackDir = nil
+		locPly.CPTBase_CurrentSoundtrackTime = nil
+		locPly.CPTBase_CurrentSoundtrackRestartTime = nil
+	end
+
+	if locPly.CPTBase_CurrentSoundtrack ~= nil and RealTime() > locPly.CPTBase_CurrentSoundtrackTime then
+		locPly.CPTBase_CurrentSoundtrack:FadeOut(2)
+		local prevNPC = locPly.CPTBase_CurrentSoundtrackNPC
+		timer.Simple(2,function()
+			if IsValid(locPly) then
+				if IsValid(locPly.CPTBase_CurrentSoundtrackNPC) and prevNPC == locPly.CPTBase_CurrentSoundtrackNPC then
+					locPly.CPTBase_CurrentSoundtrack:Stop()
+					locPly.CPTBase_CurrentSoundtrack = CreateSound(locPly,locPly.CPTBase_CurrentSoundtrackDir)
+					locPly.CPTBase_CurrentSoundtrack:SetSoundLevel(0.2)
+					locPly.CPTBase_CurrentSoundtrack:Play()
 				end
-			end)
-			LocalPlayer().CPTBase_CurrentSoundtrackTime = RealTime() +LocalPlayer().CPTBase_CurrentSoundtrackRestartTime
-		end
+			end
+		end)
+		locPly.CPTBase_CurrentSoundtrackTime = RealTime() + locPly.CPTBase_CurrentSoundtrackRestartTime
 	end
 end)

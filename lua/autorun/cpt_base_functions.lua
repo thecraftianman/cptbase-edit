@@ -1,8 +1,8 @@
-/*--------------------------------------------------
+--[[--------------------------------------------------
 	Copyright (c) 2019 by Cpt. Hazama, All rights reserved.
 	Nothing in these files or/and code may be reproduced, adapted, merged or
 	modified without prior written consent of the original author, Cpt. Hazama
---------------------------------------------------*/
+--------------------------------------------------]]--
 include('server/cpt_utilities.lua')
 
 local buttonsounds = {"buttons/blip1.wav","buttons/button14.wav","buttons/button17.wav","buttons/button24.wav","buttons/button3.wav","buttons/button9.wav","buttons/combine_button7.wav","buttons/lightswitch2.wav","common/warning.wav","ambient/materials/smallwire_pluck3.wav","ambient/voices/citizen_beaten1.wav"}
@@ -136,7 +136,7 @@ local function CPT_KillEverything(ply)
 end
 concommand.Add("cpt_killeverything", CPT_KillEverything)
 
-if (CLIENT) then
+if not CLIENT then return end
 local function CPTBaseMenu_Func(panel)
 	if !game.SinglePlayer() then
 		if !LocalPlayer():IsAdmin() or !LocalPlayer():IsSuperAdmin() then
@@ -171,9 +171,8 @@ local function CPTBaseMenu_Func_Nodegraph(panel)
 end
 
 function CPTBaseMenu_AddFunc() -- Add menus here
-	spawnmenu.AddToolMenuOption("CPTBase","Functions","Default Functions","Default Functions","","",CPTBaseMenu_Func) -- Tab, Dropdown, Select, Title
-	spawnmenu.AddToolMenuOption("CPTBase","Functions","Nodegraph","Nodegraph","","",CPTBaseMenu_Func_Nodegraph) -- Tab, Dropdown, Select, Title
+	spawnmenu.AddToolMenuOption("Options","CPTBase","Default Functions","Default Functions","","",CPTBaseMenu_Func) -- Tab, Dropdown, Select, Title
+	spawnmenu.AddToolMenuOption("Options","CPTBase","Nodegraph","Nodegraph","","",CPTBaseMenu_Func_Nodegraph) -- Tab, Dropdown, Select, Title
 end
 
 hook.Add("PopulateToolMenu", "CPTBaseMenu_AddFunc", CPTBaseMenu_AddFunc)
-end

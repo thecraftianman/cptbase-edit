@@ -26,7 +26,7 @@ if (SERVER) then
 	TASK_MOVE_TO_POSITION = 802
 	TASK_SPEAK_TO_ENTITY = 803
 end
-
+--[[
 function LerpValue(clampedFraction,startValue,endValue)
 	return (1 -clampedFraction) *startValue +clampedFraction *endValue
 end
@@ -34,7 +34,7 @@ end
 function RankTable(tbl)
 	table.SortByKey(tbl,true)
 end
-
+]]
 function UpdateTableList(tb,v)
 	if !table.HasValue(tb,v) then
 		table.insert(tb,v)
@@ -104,7 +104,7 @@ function NPC_Meta:GetNodeManager()
 		end
 	end
 end
-
+--[[
 function PrintEntityPlacement(ent)
 	print("-----------------------")
 	print("Vector("..ent:GetPos().x..","..ent:GetPos().y..","..ent:GetPos().z..")")
@@ -129,7 +129,7 @@ end
 function FindGameFile(filedir)
 	return file.Exists(filedir,"GAME")
 end
-
+]]
 function NPC_Meta:GetCPTBaseRagdoll()
 	return self.CPTBase_Ragdoll
 end
@@ -292,14 +292,14 @@ function NPC_Meta:SetSummonedByPlayer(ent)
 	self.TheFollowedPlayer = ent
 	self.MinimumFollowDistance = math.random(120,150)
 end
-
+--[[
 function IsAIDisabled()
 	if GetConVarNumber("ai_disabled") == 1 then
 		return true
 	end
 	return false
 end
-
+]]
 // util.AddAttackEffect(self,enemy,8,DMG_POI,1.5,10)
 function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 	if GetConVarNumber("cpt_allowspecialdmg") == 0 then return end
@@ -1085,7 +1085,7 @@ function PLY_Meta:AddToAmmoCount(amount,ammo)
 	end
 	self:GiveAmmo(amount,ammo,false)
 end
-
+--[[
 if CLIENT then
 	function GetRealName(ent)
 		if ent:IsPlayer() then
@@ -1099,16 +1099,16 @@ if CLIENT then
 		end
 	end
 end
-
+]]
 function NPC_Meta:KeyDown(key)
 	return true
 end
-
+--[[
 function Unregistered_SelectFromTable(tbl)
 	if tbl == nil then return tbl end
 	return tbl[math.random(1,#tbl)]
 end
-
+]]
 function ENT_Meta:SelectFromTable(tbl)
 	if tbl == nil then return tbl end
 	return tbl[math.random(1,#tbl)]
@@ -1424,15 +1424,15 @@ function NPC_Meta:SimplePlaySound(_Sound,_SoundLevel,_SoundPitch,_UseDotPlay)
 	local _SoundLevel = _SoundLevel or 80
 	local _SoundPitch = _SoundPitch or 100
 	if _UseDotPlay then
-		sound.Play(_Sound,self:GetPos(),_SoundLevel,_SoundPitch *GetConVarNumber("host_timescale"))
+		sound.Play(_Sound,self:GetPos(),_SoundLevel,_SoundPitch * GetConVar("host_timescale"):GetInt())
 	else
-		playsound = CreateSound(self,_Sound)
+		local playsound = CreateSound(self,_Sound)
 		playsound:SetSoundLevel(_SoundLevel)
 		if self.CurrentSound != nil then
 			self.CurrentSound:Stop()
 		end
 		playsound:Play()
-		playsound:ChangePitch(_SoundPitch *GetConVarNumber("host_timescale"),0)
+		playsound:ChangePitch(_SoundPitch * GetConVar("host_timescale"):GetInt(),0)
 		playsound:ChangeVolume(90,0)
 	end
 	self:OnPlaySound(_Sound,nil)

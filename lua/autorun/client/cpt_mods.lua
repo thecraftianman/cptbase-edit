@@ -1,4 +1,4 @@
-if !CPTBase then return end
+if not CPTBase then return end
 
 CPTBase_OfficialMods = {
 	[1] = {name = "Zombie Master 2 SNPCs",version = "0.2.1"},
@@ -38,7 +38,7 @@ function CPTBaseMenu_ShowMods(Panel)
 	end
 end
 
-function CPTBase_AddMenu_Mods()
+--[[ function CPTBase_AddMenu_Mods()
 	-- spawnmenu.AddToolMenuOption("CPTBase","Client","Mods","Mods","","",CPTBaseMenu_ShowMods) -- Tab, Dropdown, Select, Title
 end
-hook.Add("PopulateToolMenu","CPTBase_AddMenu_Mods",CPTBase_AddMenu_Mods)
+hook.Add("PopulateToolMenu","CPTBase_AddMenu_Mods",CPTBase_AddMenu_Mods) ]]--

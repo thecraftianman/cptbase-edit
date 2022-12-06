@@ -1,4 +1,4 @@
-if !CPTBase then return end
+if not CPTBase then return end
 -------------------------------------------------------------------------------------------------------------------
 /*
 	To do:
@@ -14,7 +14,7 @@ CPTBASE_NODE_HINT = 5
 
 CPTBASE_NODE_TABLE = {}
 
-CPTBASE_SV_MAXNODES = 7500 // 4096 is default for Garry's Mod. Too bad we're too cool for gSchool
+CPTBASE_SV_MAXNODES = 7500 -- 4096 is default for Garry's Mod. Too bad we're too cool for gSchool
 CPTBASE_SV_DISTANCEBETWEENNODES = 170
 CPTBASE_SV_MAXGENERATIONTIME = 15
 CPTBASE_SV_MAXDISTANCECHECK = 32768
@@ -33,28 +33,28 @@ hook.Add("EntityRemoved","cpt_DetectRealNodes",function(ent)
 end)
 -------------------------------------------------------------------------------------------------------------------
 hook.Add("PlayerInitialSpawn","cpt_FindNodegraph",function(ply)
-	if GetConVarNumber("cpt_debug_nodegraph") == 1 then
+	if GetConVar("cpt_debug_nodegraph"):GetInt() == 1 then
 		timer.Simple(8,function()
 			local map = game.GetMap()
 			local dir = "maps/graphs/"
 			local fileextension = ".ain"
-			if !FindGameFile(dir .. map .. fileextension) then
+			if not file.Exists(dir .. map .. fileextension, "GAME") then
 				ply:ChatPrint("CPTBase Warning! This map does not have a nodegraph! Without a nodegraph, all SNPCs will not be able to navigate. Try searching up the map on the workshop and look for someone who has made a nodegraph. Otherwise, you'll need to make your own using Silverlan's Nodegraph tool: https://steamcommunity.com/sharedfiles/filedetails/?id=104487190")
-				if ply:IsSuperAdmin() && !CPTBASE_SV_NODEGRAPH then
+				if ply:IsSuperAdmin() && not CPTBASE_SV_NODEGRAPH then
 					CPTBASE_SV_CANSETNODEGRAPH = true
 				end
-			elseif FindGameFile(dir .. map .. fileextension) then
+			elseif file.Exists(dir .. map .. fileextension, "GAME") then
 				local filesize = file.Size(dir .. map .. fileextension,"GAME")
 				if filesize < 1500 && filesize > 400 then
 					ply:ChatPrint("CPTBase Warning! This map has a nodegraph however it is very small. If this map is small then ignore this error however, if the map is as big as gm_construct or bigger, then this nodegraph is most likely bad/unfinished. Expect bad pathfinding!")
 				elseif filesize <= 400 && filesize > 20 then
 					ply:ChatPrint("CPTBase Warning! The nodegraph that this map has is incomplete/very poorly made. Expect really bad pathfinding!")
-					if ply:IsSuperAdmin() && !CPTBASE_SV_NODEGRAPH then
+					if ply:IsSuperAdmin() && not CPTBASE_SV_NODEGRAPH then
 						CPTBASE_SV_CANSETNODEGRAPH = true
 					end
 				elseif filesize <= 20 then
 					ply:ChatPrint("CPTBase Warning! This map does not have a nodegraph! Without a nodegraph, all SNPCs will not be able to navigate. Try searching up the map on the workshop and look for someone who has made a nodegraph. Otherwise, you'll need to make your own using Silverlan's Nodegraph tool: https://steamcommunity.com/sharedfiles/filedetails/?id=104487190")
-					if ply:IsSuperAdmin() && !CPTBASE_SV_NODEGRAPH then
+					if ply:IsSuperAdmin() && not CPTBASE_SV_NODEGRAPH then
 						CPTBASE_SV_CANSETNODEGRAPH = true
 					end
 				elseif filesize >= 1500 then
@@ -79,7 +79,7 @@ hook.Add("Initialize","cpt_DetectCanMakeNodegraph",function()
 end)
 -------------------------------------------------------------------------------------------------------------------
 concommand.Add("sv_cptbase_ainodes",function(caller,cmd,arg)
-	if !caller:IsSuperAdmin() then return end
+	if not caller:IsSuperAdmin() then return end
 	local ent
 	for _,v in ipairs(ents.GetAll()) do
 		if v:GetClass() == "cpt_ai_node_manager" then
@@ -90,8 +90,8 @@ concommand.Add("sv_cptbase_ainodes",function(caller,cmd,arg)
 end)
 -------------------------------------------------------------------------------------------------------------------
 concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
-	if GetConVarNumber("cpt_debug_cancreategraph") == 0 then return end
-	if !caller:IsSuperAdmin() then return end
+	if GetConVar("cpt_debug_cancreategraph"):GetInt() == 0 then return end
+	if not caller:IsSuperAdmin() then return end
 	-- if !CPTBASE_SV_CANSETNODEGRAPH then return end
 	if CPTBASE_SV_NODEGRAPH then return end
 	if CPTBASE_SV_FINISHEDNODEGRAPH then return end
@@ -106,7 +106,7 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 		nm:Spawn()
 		local function CreateNode()
 			if CPTBASE_SV_FINISHEDNODEGRAPH then return end
-			local ve = VectorRand() *CPTBASE_SV_MAXDISTANCECHECK
+			local ve = VectorRand() * CPTBASE_SV_MAXDISTANCECHECK
 			local tA = false
 			if util.IsInWorld(ve) then
 				local tr = util.TraceLine({
@@ -126,7 +126,7 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 					end
 					if cmN then
 						local n = ents.Create("cpt_ai_node")
-						n:SetPos(nP +Vector(0,0,3))
+						n:SetPos(nP + Vector(0,0,3))
 						n:SetNodeType(1)
 						n:SetNodeRadius(375)
 						n:SetCanBeRemoved(true)
@@ -145,7 +145,7 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 		local loadedNodegraph = util.GetCPTBaseNodegraph()
 		if loadedNodegraph != "noData" then
 			if loadedNodegraph != nil && table.Count(loadedNodegraph) > 0 then
-				nodegraphCount = table.Count(loadedNodegraph)
+				-- nodegraphCount = table.Count(loadedNodegraph)
 				for _,node in pairs(loadedNodegraph) do
 					nm:InsertNode(node)
 				end

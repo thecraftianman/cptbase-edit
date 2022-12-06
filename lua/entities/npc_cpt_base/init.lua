@@ -1,4 +1,4 @@
-if !CPTBase then return end
+if not CPTBase then return end
 AddCSLuaFile('cl_init.lua')
 AddCSLuaFile('shared.lua')
 include('ai_schedules.lua')
@@ -1343,8 +1343,8 @@ function ENT:HearingCode()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 net.Receive("cpt_SpeakingPlayer",function(len,pl)
-	v = net.ReadEntity()
-	ent = net.ReadEntity()
+	local v = net.ReadEntity()
+	local ent = net.ReadEntity()
 	v:SetNWEntity("cpt_SpokenPlayer",ent)
 end)
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1849,21 +1849,22 @@ function ENT:LocateEnemies_WIP()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:LocateEnemies()
-	if self.Faction == "FACTION_NONE" || self.CanSetEnemy == false then return end
-	for _,v in ipairs(ents.FindInSphere(self:GetPos(),self.FindEntitiesDistance)) do
-		if v:IsNPC() && v != self && v:Health() > 0 then
+	if self.Faction == "FACTION_NONE" then return end
+	if not self.CanSetEnemy then return end
+	for _, v in ipairs( ents.FindInSphere( self:GetPos(), self.FindEntitiesDistance ) ) do
+		if v:IsNPC() and v ~= self and v:Health() > 0 then
 			if v:GetClass() == "bullseye_strider_focus" then break end
 			if v.UseNotarget then return end
-			if (self:Visible(v) && self:CanSeeEntities(v) && self:FindInCone(v,self.ViewAngle)) && v.Faction != "FACTION_NONE" && self:CanSetAsEnemy(v) then
-				if ((v:GetFaction() == nil or v:GetFaction() != nil) && v.Faction != self:GetFaction()) && self:Disposition(v) != D_LI && !table.HasValue(self.tbl_BlackList,v) then
+			if (self:Visible(v) and self:CanSeeEntities(v) and self:FindInCone(v,self.ViewAngle)) and v.Faction ~= "FACTION_NONE" and self:CanSetAsEnemy(v) then
+				if ((v:GetFaction() == nil or v:GetFaction() ~= nil) and v.Faction ~= self:GetFaction()) and self:Disposition(v) ~= D_LI and not self.tbl_BlackList[v] then
 					return v
 				end
 			end
-		elseif self.FriendlyToPlayers == false && GetConVarNumber("ai_ignoreplayers") == 0 && v:IsPlayer() && v:Alive() && !v.IsPossessing && v != self.Possessor then
-			if (self:Visible(v) && self:CanSeeEntities(v) && self:FindInCone(v,self.ViewAngle)) && v.IsPossessing != true && v.Faction != "FACTION_NONE" then
+		elseif self.FriendlyToPlayers == false and GetConVarNumber("ai_ignoreplayers") == 0 and v:IsPlayer() and v:Alive() and not v.IsPossessing and v ~= self.Possessor then
+			if (self:Visible(v) and self:CanSeeEntities(v) and self:FindInCone(v,self.ViewAngle)) and v.Faction ~= "FACTION_NONE" then
 				if v.UseNotarget then return end
 				if v.Faction == "FACTION_NOTARGET" then return end
-				if self:GetFaction() != "FACTION_PLAYER" && self.Faction != v.Faction && !table.HasValue(self.tbl_BlackList,v) then
+				if self:GetFaction() ~= "FACTION_PLAYER" and self.Faction ~= v.Faction and not self.tbl_BlackList[v] then
 					return v
 				end
 			end
