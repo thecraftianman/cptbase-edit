@@ -1,4 +1,4 @@
-if !CPTBase then return end
+if not CPTBase then return end
 -------------------------------------------------------------------------------------------------------------------
 hook.Add("ScaleNPCDamage","cpt_FindHitGroup",function(ent,hitbox,dmginfo)
 	if ent.CPTBase_NPC == true then
@@ -18,14 +18,14 @@ hook.Add("ShouldCollide","CPTBase_NextbotNavShouldCollide_" .. math.Rand(1,99999
 end)
 
 hook.Add("EntityEmitSound","CPTBase_DetectEntitySounds",function(data)
-	if GetConVarNumber("ai_disabled") == 1 then
+	if GetConVar("ai_disabled"):GetInt() == 1 then
 		return nil -- Don't alter sound data, proceed
 	end
-	if GetConVarNumber("cpt_npchearing_advanced") == 0 then
+	if GetConVar("cpt_npchearing_advanced"):GetInt() == 0 then
 		return nil -- Don't alter sound data, proceed
 	end
-	if !IsValid(data.Entity) then return nil end
-	for _,v in pairs(ents.GetAll()) do
+	if not IsValid(data.Entity) then return nil end
+	for _,v in ipairs(ents.GetAll()) do
 		if IsValid(v) && v:IsNPC() && v != data.Entity && v.CPTBase_NPC && v.UseAdvancedHearing then
 			local ent = data.Entity
 			local vol = data.SoundLevel
@@ -39,18 +39,15 @@ end)
 
 hook.Add("PlayerSpawnedNPC","cpt_SetOwnerNPC",function(ply,ent)
 	if ent:IsNPC() && ent.CPTBase_NPC then
-		if ent:GetOwner() == NULL then
-			ent.NPC_Owner = ply
-		end
+		if ent:GetOwner() ~= NULL then return end
+		ent.NPC_Owner = ply
 	end
 end)
 
 hook.Add("OnNPCKilled","cpt_KilledNPC",function(victim,inflictor,killer)
-	if killer.CPTBase_NPC then
-		if killer != victim then
-			killer:OnKilledEnemy(victim)
-			killer:RemoveFromMemory(victim)
-		end
+	if killer.CPTBase_NPC and killer ~= victim then
+		killer:OnKilledEnemy(victim)
+		killer:RemoveFromMemory(victim)
 	end
 end)
 
@@ -111,8 +108,8 @@ end)
 hook.Add("Think","CPTBase_PlayerRagdolling",function()
 	for _,v in ipairs(player.GetAll()) do
 		if not IsValid(v) then return end
-       	if not v.CPTBase_HasBeenRagdolled then return end
-       	v:UpdateNPCFaction()
+		if not v.CPTBase_HasBeenRagdolled then return end
+		v:UpdateNPCFaction()
 	--[[	if v:GetNWInt("CPTBase_Magicka") < v:GetNWInt("CPTBase_MaxMagicka") && CurTime() > v:GetNWInt("CPTBase_NextMagickaT") then
 			v:SetNWInt("CPTBase_Magicka",v:GetNWInt("CPTBase_Magicka") +1)
 			if v:GetNWInt("CPTBase_Magicka") > v:GetNWInt("CPTBase_MaxMagicka") then
@@ -130,10 +127,10 @@ hook.Add("Think","CPTBase_PlayerRagdolling",function()
 				v:SetMoveType(MOVETYPE_OBSERVER)
 				v:SetPos(v:GetCPTBaseRagdoll():GetPos())
 				if v:GetCPTBaseRagdoll():GetVelocity():Length() > 10 then
-					v.LastRagdollMoveT = CurTime() +5
+					v.LastRagdollMoveT = CurTime() + 5
 				end
 				if v:KeyReleased(IN_FORWARD) then
-					v.LastRagdollMoveT = v.LastRagdollMoveT -0.6
+					v.LastRagdollMoveT = v.LastRagdollMoveT - 0.6
 				end
 				if CurTime() > v.LastRagdollMoveT then
 					v:CPTBaseUnRagdoll()
@@ -146,7 +143,7 @@ end)
 
 hook.Add("PlayerDeath","CPTBase_PlayerRagdollingDeath",function(v,inflictor,attacker)
 	if not v.CPTBase_HasBeenRagdolled then return end
-   	if not IsValid(v:GetCPTBaseRagdoll()) then return end
+	if not IsValid(v:GetCPTBaseRagdoll()) then return end
 	if IsValid(v:GetRagdollEntity()) then
 		local ent = v:GetCPTBaseRagdoll()
 		local rag = v:GetRagdollEntity()

@@ -1,5 +1,6 @@
 local CPTBase_Addons = {}
 local tbl_cptMods = {}
+local CPTBASE_NPCWEAPON_TABLE = {}
 
 CPTBase = {
 	AddToTable = function(tbl,data)

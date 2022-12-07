@@ -301,11 +301,11 @@ end
 ]]
 -- util.AddAttackEffect(self,enemy,8,DMG_POI,1.5,10)
 function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
-	if GetConVarNumber("cpt_allowspecialdmg") == 0 then return end
+	if GetConVar("cpt_allowspecialdmg"):GetInt() == 0 then return end
 	if (!ent:IsNPC() && !ent:IsPlayer()) then return end
 	local finaldmg = AdaptCPTBaseDamage(dmg)
 	local deaths = ent:Deaths()
-	local EFDeath = delay *lp
+	local EFDeath = delay * lp
 	local fTime = true
 	local function SpawnEFM(ent,mat)
 		if SERVER then
@@ -362,16 +362,16 @@ function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 				end
 				dmginfo:SetDamageType(DMG_RADIATION)
 				if attacker:IsValid() then
-					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() +attacker:OBBCenter()))
+					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() + attacker:OBBCenter()))
 				else
-					dmginfo:SetDamagePosition(ent:GetPos() +ent:OBBCenter())
+					dmginfo:SetDamagePosition(ent:GetPos() + ent:OBBCenter())
 				end
 				if IsValid(ent) then
 					ent:TakeDamageInfo(dmginfo)
 				end
 				ent:EmitSound("player/geiger3.wav",60,100)
-				if ent:IsPlayer() then ent:ChatPrint("RADS +" .. tostring(math.Round(lp *1.5))) end
-				ent.CPTBase_EF_RAD = ent.CPTBase_EF_RAD +math.Round(lp *1.5)
+				if ent:IsPlayer() then ent:ChatPrint("RADS +" .. tostring(math.Round(lp * 1.5))) end
+				ent.CPTBase_EF_RAD = ent.CPTBase_EF_RAD + math.Round(lp * 1.5)
 			end
 		end
 		timer.Create("CPTBase_DoEffectDamage_" .. math.Rand(1,99999),delay,lp,function() DoDamage() end)
@@ -403,9 +403,9 @@ function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 				end
 				dmginfo:SetDamageType(DMG_POISON)
 				if attacker:IsValid() then
-					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() +attacker:OBBCenter()))
+					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() + attacker:OBBCenter()))
 				else
-					dmginfo:SetDamagePosition(ent:GetPos() +ent:OBBCenter())
+					dmginfo:SetDamagePosition(ent:GetPos() + ent:OBBCenter())
 				end
 				if IsValid(ent) then
 					ent:TakeDamageInfo(dmginfo)
@@ -442,9 +442,9 @@ function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 				end
 				dmginfo:SetDamageType(DMG_DROWN)
 				if attacker:IsValid() then
-					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() +attacker:OBBCenter()))
+					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() + attacker:OBBCenter()))
 				else
-					dmginfo:SetDamagePosition(ent:GetPos() +ent:OBBCenter())
+					dmginfo:SetDamagePosition(ent:GetPos() + ent:OBBCenter())
 				end
 				if IsValid(ent) then
 					ent:TakeDamageInfo(dmginfo)

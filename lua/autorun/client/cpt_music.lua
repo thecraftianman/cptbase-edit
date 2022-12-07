@@ -5,7 +5,7 @@ local NPC_Meta = FindMetaTable("NPC")
 
 function NPC_Meta:CreateThemeSong(track,len)
 	for _,v in ipairs(player.GetAll()) do
-		if GetConVarNumber("cpt_allowmusic") == 0 then return end
+		if GetConVar("cpt_allowmusic"):GetInt() == 0 then return end
 		if v.CPTBase_CurrentSoundtrack == nil then
 			v.CPTBase_CurrentSoundtrack = CreateSound(v,track)
 			v.CPTBase_CurrentSoundtrack:SetSoundLevel(0.2)
