@@ -3,7 +3,7 @@
 	Nothing in these files or/and code may be reproduced, adapted, merged or
 	modified without prior written consent of the original author, Cpt. Hazama
 --------------------------------------------------]]--
-include('server/cpt_utilities.lua')
+include("server/cpt_utilities.lua")
 
 local buttonsounds = {"buttons/blip1.wav","buttons/button14.wav","buttons/button17.wav","buttons/button24.wav","buttons/button3.wav","buttons/button9.wav","buttons/combine_button7.wav","buttons/lightswitch2.wav","common/warning.wav","ambient/materials/smallwire_pluck3.wav","ambient/voices/citizen_beaten1.wav"}
 local killsounds = {"music/stingers/industrial_suspense1.wav","music/stingers/industrial_suspense2.wav","music/stingers/hl1_stinger_song16.mp3","music/stingers/hl1_stinger_song27.mp3","music/stingers/hl1_stinger_song28.mp3","music/stingers/hl1_stinger_song7.mp3","music/stingers/hl1_stinger_song8.mp3"}
@@ -38,7 +38,7 @@ local function CPT_RemoveSNPCs(ply)
 			undo.ReplaceEntity(v,nil)
 			v:Remove()
 			i = i + 1
-			end            
+			end
 		end
 		if (SERVER) then
 			ply:SendLua("GAMEMODE:AddNotify(\"Removed " .. i .. " SNPCs\", NOTIFY_CLEANUP, 5)")
@@ -57,7 +57,7 @@ local function CPT_RemoveNPCs(ply)
 			undo.ReplaceEntity(v,nil)
 			v:Remove()
 			i = i + 1
-			end            
+			end
 		end
 		if (SERVER) then
 			ply:SendLua("GAMEMODE:AddNotify(\"Removed " .. i .. " NPCs\", NOTIFY_CLEANUP, 5)")
@@ -76,7 +76,7 @@ local function CPT_RemoveNextbots(ply)
 			undo.ReplaceEntity(v,nil)
 			v:Remove()
 			i = i + 1
-			end 
+			end
 		end
 		if (SERVER) then
 			ply:SendLua("GAMEMODE:AddNotify(\"Removed " .. i .. " Nextbots\", NOTIFY_CLEANUP, 5)")
@@ -170,7 +170,7 @@ local function CPTBaseMenu_Func_Nodegraph(panel)
 	panel:AddControl("Button", {Label = "Generate CPTBase Nodegraph", Command = "CPTBase_GenerateNodegraph"})
 end
 
-function CPTBaseMenu_AddFunc() -- Add menus here
+local function CPTBaseMenu_AddFunc() -- Add menus here
 	spawnmenu.AddToolMenuOption("Options","CPTBase","Default Functions","Default Functions","","",CPTBaseMenu_Func) -- Tab, Dropdown, Select, Title
 	spawnmenu.AddToolMenuOption("Options","CPTBase","Nodegraph","Nodegraph","","",CPTBaseMenu_Func_Nodegraph) -- Tab, Dropdown, Select, Title
 end

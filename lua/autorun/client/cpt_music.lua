@@ -1,10 +1,7 @@
 if not CPTBase then return end
 if not CLIENT then return end
 -------------------------------------------------------------------------------------------------------------------
-local ENT_Meta = FindMetaTable("Entity")
 local NPC_Meta = FindMetaTable("NPC")
-local PLY_Meta = FindMetaTable("Player")
-local WPN_Meta = FindMetaTable("Weapon")
 
 function NPC_Meta:CreateThemeSong(track,len)
 	for _,v in ipairs(player.GetAll()) do

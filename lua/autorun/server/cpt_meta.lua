@@ -5,27 +5,26 @@ local NPC_Meta = FindMetaTable("NPC")
 local PLY_Meta = FindMetaTable("Player")
 local WPN_Meta = FindMetaTable("Weapon")
 local NBT_Meta = FindMetaTable("NextBot")
-local PHYS_Meta = FindMetaTable("PhysObj")
+-- local PHYS_Meta = FindMetaTable("PhysObj")
 
-if (SERVER) then
-	NPC_STATE_LOST = 8
-	MOVETYPE_SWIM = 12
-	DMG_FROST = 10
-	DMG_RAD = 11
-	DMG_POI = 12
-	DMG_AFTERBURN = 13
-	DMG_DARKENERGY = 14
-	DMG_ELEC = 15
-	AITYPE_NUETRAL = 1
-	AITYPE_NORMAL = 2
-	AITYPE_AGGRESSIVE = 3
-	util.AddNetworkString("cpt_ControllerView")
-	TASK_NONE = 0
-	TASK_IDLE_GUARD = 800
-	TASK_PATROL_TO_POSIITON = 801
-	TASK_MOVE_TO_POSITION = 802
-	TASK_SPEAK_TO_ENTITY = 803
-end
+util.AddNetworkString("cpt_ControllerView")
+NPC_STATE_LOST = 8
+MOVETYPE_SWIM = 12
+DMG_FROST = 10
+DMG_RAD = 11
+DMG_POI = 12
+DMG_AFTERBURN = 13
+local DMG_DARKENERGY = 14
+local DMG_ELEC = 15
+-- AITYPE_NEUTRAL = 1
+AITYPE_NORMAL = 2
+-- AITYPE_AGGRESSIVE = 3
+-- TASK_NONE = 0
+-- TASK_IDLE_GUARD = 800
+-- TASK_PATROL_TO_POSIITON = 801
+-- TASK_MOVE_TO_POSITION = 802
+-- TASK_SPEAK_TO_ENTITY = 803
+
 --[[
 function LerpValue(clampedFraction,startValue,endValue)
 	return (1 -clampedFraction) *startValue +clampedFraction *endValue
@@ -34,13 +33,13 @@ end
 function RankTable(tbl)
 	table.SortByKey(tbl,true)
 end
-]]
+
 function UpdateTableList(tb,v)
 	if !table.HasValue(tb,v) then
 		table.insert(tb,v)
 	end
 end
-
+]]
 function NPC_Meta:IsAlly(ent)
 	if self:Disposition(ent) == D_LI || self:Disposition(ent) == D_NU then
 		return true
@@ -51,7 +50,7 @@ end
 function NPC_Meta:GetSpaceTexture(range)
 	local tr = util.TraceLine({
 		start = self:GetPos(),
-		endpos = self:GetPos() +self:GetUp() *-range,
+		endpos = self:GetPos() + self:GetUp() * -range,
 		filter = self,
 	})
 	local mat = util.GetSurfacePropName(tr.SurfaceProps)
@@ -64,7 +63,7 @@ function NPC_Meta:Freeze(t)
 			self:StopMoving()
 		end
 	end
-	timer.Create("CPTBase_FreezeNPCMovement_RandomInterval_"..math.Rand(1,99999) .. self:EntIndex(),0.1,t,function() DoFreeze() end)
+	timer.Create("CPTBase_FreezeNPCMovement_RandomInterval_" .. math.Rand(1,99999) .. self:EntIndex(),0.1,t,function() DoFreeze() end)
 end
 
 function util.SaveCPTBaseNodegraph()
@@ -181,17 +180,17 @@ function PLY_Meta:SpawnCPTBaseRagdoll(ent,velocity,caller)
 			local bonephys = rag:GetPhysicsObjectNum(i)
 			if IsValid(bonephys) then
 				local bonepos,boneang = self:GetBonePosition(rag:TranslatePhysBoneToBone(i))
-				if(bonepos) then
+				if bonepos then
 					bonephys:SetPos(bonepos)
 					bonephys:SetAngles(boneang)
 					if IsValid(caller) then
 						-- bonephys:ApplyForceCenter(caller:GetPos() -rag:GetForward() *velocity.x +rag:GetRight() *velocity.y +rag:GetUp() *velocity.z)
-						bonephys:SetVelocity(rag:GetVelocity() +caller:GetForward() *velocity.x +caller:GetRight() *velocity.y +caller:GetUp() *velocity.z)
+						bonephys:SetVelocity(rag:GetVelocity() + caller:GetForward() * velocity.x + caller:GetRight() * velocity.y + caller:GetUp() * velocity.z)
 					end
 				end
 			end
 		end
-		ent.LastRagdollMoveT = CurTime() +3
+		ent.LastRagdollMoveT = CurTime() + 3
 		ent:SetCPTBaseRagdoll(rag)
 		ent.RagdollHealthCPTBase = self:Health()
 		ent.RagdollArmorCPTBase = self:Armor()
@@ -228,9 +227,9 @@ function PLY_Meta:CreateRagdolledPlayer(vel,caller)
 	local velocity = vel or Vector(-300,0,300)
 	self:SpawnCPTBaseRagdoll(self,velocity,caller)
 end
-
+--[[
 function ENT_Meta:GetCurrentFrame(fps)
-	return self:GetCycle() *fps
+	return self:GetCycle() * fps
 end
 
 function NPC_Meta:SetInvisible(inv)
@@ -262,7 +261,7 @@ function ENT_Meta:GetAllPlayers()
 		return v
 	end
 end
-
+]]
 SNDDURATION_TABLE = {}
 
 function NPC_Meta:GetNPCEnemy()
@@ -300,7 +299,7 @@ function IsAIDisabled()
 	return false
 end
 ]]
-// util.AddAttackEffect(self,enemy,8,DMG_POI,1.5,10)
+-- util.AddAttackEffect(self,enemy,8,DMG_POI,1.5,10)
 function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 	if GetConVarNumber("cpt_allowspecialdmg") == 0 then return end
 	if (!ent:IsNPC() && !ent:IsPlayer()) then return end
@@ -546,9 +545,9 @@ function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 				end
 				dmginfo:SetDamageType(DMG_GENERIC)
 				if attacker:IsValid() then
-					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() +attacker:OBBCenter()))
+					dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() + attacker:OBBCenter()))
 				else
-					dmginfo:SetDamagePosition(ent:GetPos() +ent:OBBCenter())
+					dmginfo:SetDamagePosition(ent:GetPos() + ent:OBBCenter())
 				end
 				if IsValid(ent) then
 					ent:TakeDamageInfo(dmginfo)
@@ -568,16 +567,16 @@ function util.AddAttackEffect(attacker,ent,dmg,ef,delay,lp)
 end
 
 function AdaptCPTBaseDamage(dmg)
-	local dif = math.Round(GetConVarNumber("cpt_aidifficulty"))
+	local dif = math.Round(GetConVar("cpt_aidifficulty"):GetInt())
 	local finaldmg
 	if dif == 1 then
-		finaldmg = dmg *0.5
+		finaldmg = dmg * 0.5
 	elseif dif == 2 then
 		finaldmg = dmg
 	elseif dif == 3 then
-		finaldmg = dmg *2
+		finaldmg = dmg * 2
 	elseif dif == 4 then
-		finaldmg = dmg *4
+		finaldmg = dmg * 4
 	else
 		finaldmg = dmg
 	end
@@ -635,7 +634,7 @@ function NPC_Meta:CreateRagdolledNPC(vel,caller,ovtype)
 	local mdl = self:GetModel()
 	local phy = string.Replace(mdl,".mdl",".phy")
 	local mtype = ovtype or "prop_ragdoll"
-	if !file.Exists(phy,"GAME") then return end // Checks if the model has physics
+	if !file.Exists(phy,"GAME") then return end -- Checks if the model has physics
 	self.CPTBase_Ragdoll = ents.Create("prop_ragdoll")
 	self.CPTBase_Ragdoll:SetModel(self:GetModel())
 	self.CPTBase_Ragdoll:SetPos(self:GetPos())
@@ -665,7 +664,7 @@ function NPC_Meta:CreateRagdolledNPC(vel,caller,ovtype)
 			if(bonepos) then
 				bonephys:SetPos(bonepos)
 				bonephys:SetAngles(boneang)
-				bonephys:SetVelocity(self.CPTBase_Ragdoll:GetVelocity() +caller:GetForward() *velocity.x +caller:GetRight() *velocity.y +caller:GetUp() *velocity.z)
+				bonephys:SetVelocity(self.CPTBase_Ragdoll:GetVelocity() + caller:GetForward() * velocity.x + caller:GetRight() * velocity.y + caller:GetUp() * velocity.z)
 				-- bonephys:ApplyForceCenter(caller:GetPos() -self.CPTBase_Ragdoll:GetForward() *velocity.x +self.CPTBase_Ragdoll:GetRight() *velocity.y +self.CPTBase_Ragdoll:GetUp() *velocity.z)
 			end
 		end
@@ -699,11 +698,11 @@ function NPC_Meta:CreateRagdolledNPC(vel,caller,ovtype)
 	-- end)
 end
 
-function NPC_Meta:SetClearPos(origin) // Credits to Silverlan
+function NPC_Meta:SetClearPos(origin) -- Credits to Silverlan
 	local mins = self:OBBMins()
 	local maxs = self:OBBMaxs()
 	local pos = origin || self:GetPos()
-	local nearents = ents.FindInBox(pos +mins,pos +maxs)
+	local nearents = ents.FindInBox(pos + mins,pos + maxs)
 	maxs.x = maxs.x *2
 	maxs.y = maxs.y *2
 	local zMax = 0
@@ -720,12 +719,12 @@ function NPC_Meta:SetClearPos(origin) // Credits to Silverlan
 	local tbl_filter = {self,entTgt}
 	local stayaway = zMax > 0
 	if(!stayaway) then
-		pos.z = pos.z +10
+		pos.z = pos.z + 10
 	else
-		zMax = zMax +10
+		zMax = zMax + 10
 	end
 	local left = Vector(0,1,0)
-	local right = left *-1
+	local right = left * -1
 	local forward = Vector(1,0,0)
 	local back = forward *-1
 	local trace_left = util.TraceLine({
@@ -849,18 +848,18 @@ end
 function util.CreateSplashDamage(pos,dmg,dmgtype,dist,attacker)
 	for _,v in ipairs(ents.FindInSphere(pos,dist)) do
 		if v:IsValid() && (v:IsNPC() || v:IsPlayer()) && attacker:Disposition(v) != D_LI && v != attacker then
-			local dmgpos = v:NearestPoint(attacker:GetPos() +attacker:OBBCenter())
+			local dmgpos = v:NearestPoint(attacker:GetPos() + attacker:OBBCenter())
 			local dmginfo = DamageInfo()
-			local dif = GetConVarNumber("cpt_aidifficulty")
+			local dif = GetConVar("cpt_aidifficulty"):GetInt()
 			local finaldmg
 			if dif == 1 then
-				finaldmg = dmg *0.5
+				finaldmg = dmg * 0.5
 			elseif dif == 2 then
 				finaldmg = dmg
 			elseif dif == 3 then
-				finaldmg = dmg *2
+				finaldmg = dmg * 2
 			elseif dif == 4 then
-				finaldmg = dmg *4
+				finaldmg = dmg * 4
 			end
 			dmginfo:SetDamage(finaldmg)
 			dmginfo:SetAttacker(attacker)
@@ -954,7 +953,7 @@ function WPN_Meta:CreateLoopSound(sound,lvl,pitch,volume)
 	local lvl = lvl or 70
 	local pitch = pitch or 100
 	local volume = volume or 75
-	_csp = CreateSound(self,sound)
+	local _csp = CreateSound(self,sound)
 	_csp:SetSoundLevel(lvl)
 	_csp:Play()
 	_csp:ChangePitch(pitch *GetConVarNumber("host_timescale"),0)
@@ -969,7 +968,7 @@ function ENT_Meta:CreateLoopSound(sound,lvl,pitch,volume)
 	local lvl = lvl or 70
 	local pitch = pitch or 100
 	local volume = volume or 75
-	_csp = CreateSound(self,sound)
+	local _csp = CreateSound(self,sound)
 	_csp:SetSoundLevel(lvl)
 	_csp:Play()
 	_csp:ChangePitch(pitch *GetConVarNumber("host_timescale"),0)
@@ -999,10 +998,11 @@ function NPC_Meta:CheckConfidence(ent)
 end
 
 function util.RandomVectorAroundPos(pos,max,ignorez)
+	local _pos
 	if !ignorez then
-		_pos = (pos +Vector(math.random(-max,max),math.random(-max,max),math.random(-max,max)))
+		_pos = (pos + Vector(math.random(-max,max),math.random(-max,max),math.random(-max,max)))
 	else
-		_pos = (pos +Vector(math.random(-max,max),math.random(-max,max),0))
+		_pos = (pos + Vector(math.random(-max,max),math.random(-max,max),0))
 	end
 	return _pos
 end
@@ -1055,7 +1055,7 @@ function WPN_Meta:SoundCreate(snd,vol,pitch)
 	end
 	return sound.Play(snd,self:GetPos(),vol,pitch *GetConVarNumber("host_timescale"),1)
 end
-
+--[[
 function PLY_Meta:GetWeaponAmmoName()
 	local CPTBase_DefaultAmmoTypes = {
 		["weapon_crowbar"] = -1,
@@ -1077,9 +1077,9 @@ function PLY_Meta:GetWeaponAmmoName()
 		return CPTBase_DefaultAmmoTypes[ply:GetActiveWeapon():GetClass()]
 	end
 end
-
+]]
 function PLY_Meta:AddToAmmoCount(amount,ammo)
-	if (self:GetAmmoCount(ammo) +amount) > 9999 then
+	if (self:GetAmmoCount(ammo) + amount) > 9999 then
 		self:RemoveAmmo(self:GetAmmoCount(ammo) -amount,ammo)
 		return
 	end
@@ -1291,11 +1291,11 @@ function ENT_Meta:FindHeadPosition(ent,bonenames)
 		return self:FindCenter(ent)
 	end
 end
-
+--[[
 function ENT_Meta:FindNearest(ent)
 	return self:NearestPoint(ent:GetPos())
 end
-
+]]
 function ENT_Meta:FindDistance(ent)
 	return self:GetPos():Distance(ent:GetPos())
 end
@@ -1307,16 +1307,16 @@ end
 function ENT_Meta:FindCenterDistance(ent)
 	return self:GetPos():Distance(self:FindCenter(ent))
 end
-
+--[[
 function WPN_Meta:OwnerUsingWeapon()
 	if IsValid(self) && IsValid(self.Owner) && IsValid(self.Owner:GetActiveWeapon()) && self.Owner:GetActiveWeapon() == self then
 		return true
 	end
 	return false
 end
-
+]]
 function PLY_Meta:FindCenterDistance(ent)
-	return self:GetPos():Distance(ent:GetPos() +ent:OBBCenter())
+	return self:GetPos():Distance(ent:GetPos() + ent:OBBCenter())
 end
 
 function ENT_Meta:FindCenter(ent)
@@ -1324,9 +1324,9 @@ function ENT_Meta:FindCenter(ent)
 		ent = self
 	end
 	if !IsValid(ent) then return self:GetPos() end
-	return ent:GetPos() +ent:OBBCenter()
+	return ent:GetPos() + ent:OBBCenter()
 end
-
+--[[
 function ENT_Meta:Zelus_PlaySound(sSound,hSNDLV) -- Community contribution by Ivan
 	if hSound == "Die" || hSound == "Death" then
 		self:EmitSound(self.m_tbSounds[hSound][math.random(1,#self.m_tbSounds[hSound])])
@@ -1369,10 +1369,10 @@ function ENT_Meta:Zelus_PlaySound(sSound,hSNDLV) -- Community contribution by Iv
 		end)
 	end
 end
-
+]]
 function NPC_Meta:PlaySound(_Sound,_SoundLevel,_SoundVolume,_SoundPitch,_UseDotPlay)
 	if self.IsSLVBaseNPC == true then return self:slvPlaySound(_Sound) end
-	if self:GetNWBool("bZelusSNPC") == true then return self:Zelus_PlaySound(_Sound,_SoundLevel) end -- Community contribution by Ivan
+	-- if self:GetNWBool("bZelusSNPC") == true then return self:Zelus_PlaySound(_Sound,_SoundLevel) end -- Community contribution by Ivan
 	if !self.CanPlaySounds then return end
 	if self.tbl_Sentences[_Sound] then
 		self:PlaySoundName(_Sound,_SoundLevel,_SoundPitch)
@@ -1471,14 +1471,14 @@ function NPC_Meta:CreateDamage(ent,dmg,attacker,dmgtype)
 	dmginfo:SetDamagePosition(ent:NearestPoint(attacker:GetPos() +attacker:OBBCenter()))
 	ent:TakeDamageInfo(dmginfo)
 end
-
+--[[
 function ENT_Meta:Zelus_MoveToPosition(hPos) -- Community contribution by Ivan
 	local i = self:GetAIMoveType()
 	if (i == AI_MOVETYPE_NULL) || (i == i == AI_MOVETYPE_STATIONARY) then return end
 	if i == AI_MOVETYPE_GROUND then
 		--self:MoveToPosition_GRND(hPos)
 		self:WalkToPosition(hPos,bChase)
-	elseif i == AI_MOVETYPE_AIRBORNE --[[&& !self:FlyingCustomized()]] then
+	elseif i == AI_MOVETYPE_AIRBORNE then -- && !self:FlyingCustomized() then
 		self:FlyToPosition(hPos,self:GetFlySpeed())
 	elseif i == AI_MOVETYPE_AQUATIC then
 		self:MoveToPosition_AQU(hPos,bChase)
@@ -1488,21 +1488,21 @@ end
 function NPC_Meta:MoveToPosition(pos)
 	if self:GetNWBool("bZelusSNPC") == true then return self:Zelus_MoveToPosition(pos) end -- Community contribution by Ivan
 	local tr = util.TraceLine({
-		start = pos +Vector(0,0,100),
-		endpos = pos -Vector(0,0,100),
+		start = pos + Vector(0,0,100),
+		endpos = pos - Vector(0,0,100),
 		filter = self
 	})
 	pos = tr.HitPos
 	local dist = self:GetPos():Distance(pos)
 	tr = util.TraceLine({
-		start = self:GetPos() +Vector(0,0,10),
-		endpos = pos +Vector(0,0,10),
+		start = self:GetPos() + Vector(0,0,10),
+		endpos = pos + Vector(0,0,10),
 		filter = self
 	})
 	if tr.Hit then
 		dist = self:GetPos():Distance(tr.HitPos) -self:OBBMaxs().y
 	end
-	self:SetLastPosition(self:GetPos() +(pos -self:GetPos()):GetNormal() *dist)
+	self:SetLastPosition(self:GetPos() + (pos - self:GetPos()):GetNormal() * dist)
 	self:TASKFUNC_LASTPOSITION()
 end
 
@@ -1515,7 +1515,7 @@ end
 		-- end
 	-- end)
 -- end
-
+]]
 function util.ShakeWorld(pos,intensity,time,dist,usesound) -- I just find this easier to remember on my part
 	if usesound != nil && usesound == true then
 		sound.Play("ambient/machines/thumper_hit.wav",pos,95,100)
@@ -1660,12 +1660,12 @@ function NPC_Meta:Alive()
 		return true
 	end
 end
-
+--[[
 function ENT_Meta:CreateSpriteTrail(call,ent,mat,color,att,sWid,eWid,trans)
 	call = util.SpriteTrail(ent,att,color,false,sWid,eWid,trans,1 /(sWid +eWid) *0.5,mat)
 	return call
 end
-
+]]
 function ENT_Meta:TranslateStringToNumber(seq)
 	return self:GetSequenceInfo(self:GetSequenceID(seq)).activity
 end
@@ -1678,7 +1678,7 @@ function NPC_Meta:TurnToDegree(degree,posAng,bPitch,iPitchMax) // Borrowing this
 	if posAng then
 		local sType = type(posAng)
 		local angTgt
-		if sType == "Vector" then angTgt = (posAng -self:GetPos()):Angle()
+		if sType == "Vector" then angTgt = (posAng - self:GetPos()):Angle()
 		else angTgt = posAng end
 		local ang = self:GetAngles()
 		if !degree then ang.y = angTgt.y; if bPitch then ang.p = angTgt.p end
@@ -1697,7 +1697,7 @@ function NPC_Meta:TurnToDegree(degree,posAng,bPitch,iPitchMax) // Borrowing this
 				if 360 -_ang.y < _iDeg then _iDeg = 360 -_ang.y end
 				ang.y = ang.y +_iDeg
 			end
-			
+
 			if bPitch then
 				iPitchMax = iPitchMax || 360
 				_ang.p = math.floor(_ang.p)
@@ -1723,7 +1723,7 @@ function NPC_Meta:TurnToDegree(degree,posAng,bPitch,iPitchMax) // Borrowing this
 		return
 	end
 	local ang = self:GetAngles()
-	ang.y = ang.y +degree
+	ang.y = ang.y + degree
 	self:SetAngles(ang)
 end
 
@@ -1766,14 +1766,14 @@ function NPC_Meta:FaceTarget(ent)
 	_faceselectedtarget:EngTask("TASK_FACE_TARGET",0)
 	self:StartSchedule(_faceselectedtarget)
 end
-
+--[[
 function ENT_Meta:StopEntityProcessing()
 	self.CurrentSchedule = nil
 	self.CurrentTask = nil
 	self:ClearSchedule()
 	self:StopMoving()
 end
-
+]]
 function NPC_Meta:StopProcessing()
 	self.CurrentSchedule = nil
 	self.CurrentTask = nil
@@ -1863,7 +1863,7 @@ function NPC_Meta:AnimationLength(activity,seq)
 	end
 	return self:SequenceDuration(self:SelectWeightedSequence(activity))
 end
-
+--[[
 function PLY_Meta:ViewModel_AnimationLength(activity,seq)
 	if type(activity) == "string" && seq != true then
 		activity = self:TranslateStringToNumber(activity)
@@ -1873,7 +1873,7 @@ function PLY_Meta:ViewModel_AnimationLength(activity,seq)
 	end
 	return self:GetViewModel():SequenceDuration(self:GetViewModel():SelectWeightedSequence(activity))
 end
-
+]]
 function WPN_Meta:AnimationLength(activity,seq)
 	if type(activity) == "string" && seq != true then
 		activity = self:TranslateStringToNumber(activity)
@@ -1913,7 +1913,7 @@ function ENT_Meta:IsFriendlyToMe(ent)
 	end
 	return false
 end
-
+--[[
 function ENT_Meta:ApplyParticle(pS,pA)
 	ParticleEffectAttach(pS,PATTACH_POINT_FOLLOW,self,pA)
 end
@@ -1962,7 +1962,7 @@ end
 function Color8Bit2Color(inputbit)
 	return Color(bit.rshift(inputbit,5) *255 /7,bit.band(bit.rshift(inputbit,2),0x07) *255 /7,bit.band(inputbit,0x03) *255 /3)
 end
-
+]]
 function NPC_Meta:PlayNPCGesture(seq,layer,playbackrate) // You should always set layer to '2' or below. I recommend only '2' though
 	if seq == nil then return end
 	if layer == nil then layer = 2 end
@@ -2016,11 +2016,11 @@ function NPC_Meta:AttackFinish(seq,time)
 		end)
 	end
 end
-
+--[[
 function ENT_Meta:HasSWEP()
 	if self:GetActiveWeapon() != nil then return true else return false end
 end
-
+]]
 function CreateUndo(ent,entname,theplayer)
 	undo.Create(entname)
 		undo.AddEntity(ent)
@@ -2030,13 +2030,13 @@ function CreateUndo(ent,entname,theplayer)
 		undo.SetCustomUndoText("Undone " .. entname)
 	undo.Finish()
 end
-
+--[[
 function NPC_Meta:DebugChat(text)
 	for _,v in ipairs(player.GetAll()) do
 		v:ChatPrint(text)
 	end
 end
-
+]]
 function NBT_Meta:IsNextbot()
 	if self.Type == "nextbot" then
 		return true
@@ -2052,7 +2052,7 @@ function ENT_Meta:IsNextbot()
 		return false
 	end
 end
-
+--[[
 function ENT_Meta:IsProp()
 	if string.find(self:GetClass(),"prop") then
 		return true
@@ -2060,8 +2060,8 @@ function ENT_Meta:IsProp()
 		return false
 	end
 end
-
-function NPC_Meta:GetSoundScriptLength(scriptName,scriptFile,scriptUseGAMEPath) // ("!HG_ALERT1","scripts/vj_hlr_sentences.txt",true) = finds the script file in /scripts/ | ("!HG_ALERT1","vjbase/hlr/vj_hlr_sentences.txt",false) = finds the script file in your /data/ folder
+]]
+function NPC_Meta:GetSoundScriptLength(scriptName,scriptFile,scriptUseGAMEPath) -- ("!HG_ALERT1","scripts/vj_hlr_sentences.txt",true) = finds the script file in /scripts/ | ("!HG_ALERT1","vjbase/hlr/vj_hlr_sentences.txt",false) = finds the script file in your /data/ folder
 	scriptName = string.Replace(scriptName,"!","")
 	if scriptFile == nil then
 		scriptFile = "scripts/sentences.txt"
@@ -2069,19 +2069,19 @@ function NPC_Meta:GetSoundScriptLength(scriptName,scriptFile,scriptUseGAMEPath) 
 	if scriptUseGAMEPath == nil then
 		scriptUseGAMEPath = true
 	end
-	local scriptFile = file.Read(scriptFile,scriptUseGAMEPath) // "scripts/vj_hlr_sentences.txt"
+	local scriptFile = file.Read(scriptFile,scriptUseGAMEPath) -- "scripts/vj_hlr_sentences.txt"
 	local scriptSenStart = string.find(scriptFile,scriptName)
 	if !scriptSenStart then return 0 end
-	local scriptLenStart = string.find(scriptFile,"Len ",scriptSenStart) +4
-	local scriptLenEnd = string.find(scriptFile,"}",scriptLenStart) -1
+	local scriptLenStart = string.find(scriptFile,"Len ",scriptSenStart) + 4
+	local scriptLenEnd = string.find(scriptFile,"}",scriptLenStart) - 1
 	local scriptLenEndB = string.find(scriptFile,"%s",scriptLenStart)
 	if scriptLenEndB && scriptLenEndB < scriptLenEnd then
-		scriptLenEnd = scriptLenEndB -1
+		scriptLenEnd = scriptLenEndB - 1
 	end
 	return tonumber(string.sub(scriptFile,scriptLenStart,scriptLenEnd))
 end
 
-function NPC_Meta:PlaySoundScript(scriptName,scriptListener,onScriptEnd,scriptSpeaker,scriptRadius,scriptVolume,scriptAttenuation,scriptDoRepeat,scriptStopOthers,scriptConcurrent,scriptToActivator,scriptFile,scriptUseGAMEPath) // Credits to Silverlan. Nobody would've figured this out without him imo
+function NPC_Meta:PlaySoundScript(scriptName,scriptListener,onScriptEnd,scriptSpeaker,scriptRadius,scriptVolume,scriptAttenuation,scriptDoRepeat,scriptStopOthers,scriptConcurrent,scriptToActivator,scriptFile,scriptUseGAMEPath) -- Credits to Silverlan. Nobody would've figured this out without him imo
 	scriptSpeaker = scriptSpeaker || self
 	scriptListener = scriptListener || self
 
@@ -2132,7 +2132,8 @@ function NPC_Meta:PlaySoundScript(scriptName,scriptListener,onScriptEnd,scriptSp
 	HLScript:Fire("kill","",0.1)
 	self:PlayerChat("Created sentence " .. scriptName)
 end
-
+--[[
 function PHYS_Meta:SetAngleVelocity(ang)
 	self:AddAngleVelocity(self:GetAngleVelocity() *-1 +ang)
 end
+]]

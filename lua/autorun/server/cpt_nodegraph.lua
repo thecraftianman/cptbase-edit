@@ -1,28 +1,28 @@
 if not CPTBase then return end
 -------------------------------------------------------------------------------------------------------------------
-/*
+--[[
 	To do:
 		- Fix stack error
 		- Add more node support types
-*/
-
+]]
+--[[
 CPTBASE_NODE_GROUND = 1
 CPTBASE_NODE_AIR = 2
 CPTBASE_NODE_CLIMB = 3
 CPTBASE_NODE_SWIM = 4
 CPTBASE_NODE_HINT = 5
-
+]]
 CPTBASE_NODE_TABLE = {}
 
-CPTBASE_SV_MAXNODES = 7500 -- 4096 is default for Garry's Mod. Too bad we're too cool for gSchool
-CPTBASE_SV_DISTANCEBETWEENNODES = 170
-CPTBASE_SV_MAXGENERATIONTIME = 15
-CPTBASE_SV_MAXDISTANCECHECK = 32768
+local CPTBASE_SV_MAXNODES = 7500 -- 4096 is default for Garry's Mod. Too bad we're too cool for gSchool
+local CPTBASE_SV_DISTANCEBETWEENNODES = 170
+local CPTBASE_SV_MAXGENERATIONTIME = 15
+local CPTBASE_SV_MAXDISTANCECHECK = 32768
 
-CPTBASE_SV_CANSETNODEGRAPH = false
-CPTBASE_SV_STARTEDNODEGRAPH = false
-CPTBASE_SV_NODEGRAPH = false
-CPTBASE_SV_FINISHEDNODEGRAPH = false
+local CPTBASE_SV_CANSETNODEGRAPH = false
+local CPTBASE_SV_STARTEDNODEGRAPH = false
+local CPTBASE_SV_NODEGRAPH = false
+local CPTBASE_SV_FINISHEDNODEGRAPH = false
 -------------------------------------------------------------------------------------------------------------------
 hook.Add("EntityRemoved","cpt_DetectRealNodes",function(ent)
 	local nodetype = ent:GetClass()
@@ -111,7 +111,7 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 			if util.IsInWorld(ve) then
 				local tr = util.TraceLine({
 					start = ve,
-					endpos = ve -Vector(0,0,CPTBASE_SV_MAXDISTANCECHECK),
+					endpos = ve - Vector(0,0,CPTBASE_SV_MAXDISTANCECHECK),
 					mask = MASK_PLAYERSOLID_BRUSHONLY
 				})
 				if tr.Hit then
@@ -132,7 +132,7 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 						n:SetCanBeRemoved(true)
 						n:Spawn()
 						n:SetCanBeRemoved(true)
-						cNodes = cNodes +1
+						cNodes = cNodes + 1
 					end
 				end
 			else
@@ -166,6 +166,6 @@ concommand.Add("CPTBase_GenerateNodegraph",function(caller,cmd,arg)
 		end)
 	end)
 	if CPTBASE_SV_FINISHEDNODEGRAPH then
-		caller:ChatPrint("CPTBase is has finished generating a temporary nodegraph. This nodegraph is dynamic and will only be available during this session. The next time you load this map, CPTBase will remake it and the nodes will most likely be in different positions.")
+		caller:ChatPrint("CPTBase has finished generating a temporary nodegraph. This nodegraph is dynamic and will only be available during this session. The next time you load this map, CPTBase will remake it and the nodes will most likely be in different positions.")
 	end
 end)

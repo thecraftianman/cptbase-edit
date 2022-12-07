@@ -287,18 +287,17 @@ function SWEP:GetViewModelPosition(pos,ang)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function SWEP:GetWorldModelPosition()
-	if CLIENT then
-		if self.Weapon:IsValid() && self.Owner:IsValid() then
-			pos,ang = self.Owner:GetBonePosition(self.Owner:LookupBone(self.WorldModelAttachmentBone))
-			ang:RotateAroundAxis(ang:Right(),self.WorldModelAdjust.Ang.Right)
-			ang:RotateAroundAxis(ang:Up(),self.WorldModelAdjust.Ang.Up)
-			ang:RotateAroundAxis(ang:Forward(),self.WorldModelAdjust.Ang.Forward)
-			pos = pos +self.WorldModelAdjust.Pos.Right *ang:Right()
-			pos = pos +self.WorldModelAdjust.Pos.Forward *ang:Forward()
-			pos = pos +self.WorldModelAdjust.Pos.Up *ang:Up()
-			return {pos=pos,ang=ang}
-		end
-	end
+	if not CLIENT then return end
+	if not IsValid(self and self:GetOwner()) then return end
+	local owner = self:GetOwner()
+	local pos, ang = owner:GetBonePosition(owner:LookupBone(self.WorldModelAttachmentBone))
+	ang:RotateAroundAxis(ang:Right(),self.WorldModelAdjust.Ang.Right)
+	ang:RotateAroundAxis(ang:Up(),self.WorldModelAdjust.Ang.Up)
+	ang:RotateAroundAxis(ang:Forward(),self.WorldModelAdjust.Ang.Forward)
+	pos = pos + self.WorldModelAdjust.Pos.Right * ang:Right()
+	pos = pos + self.WorldModelAdjust.Pos.Forward * ang:Forward()
+	pos = pos + self.WorldModelAdjust.Pos.Up * ang:Up()
+	return {pos = pos, ang = ang}
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function SWEP:AcceptInput(name,entActivator,entCaller,data)

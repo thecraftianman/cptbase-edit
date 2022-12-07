@@ -1,4 +1,5 @@
-CPTBase_Addons = {}
+local CPTBase_Addons = {}
+local tbl_cptMods = {}
 
 CPTBase = {
 	AddToTable = function(tbl,data)

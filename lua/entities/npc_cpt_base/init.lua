@@ -1769,7 +1769,9 @@ function ENT:UpdateFriends()
 				if (v:GetFaction() != nil && v.Faction == self:GetFaction()) then
 					self:SetRelationship(v,D_LI)
 					self:OnSpottedFriendly(v)
-					UpdateTableList(self.tbl_FriendMemory,v)
+					if not table.HasValue(self.tbl_FriendMemory,v) then
+						table.insert(self.tbl_FriendMemory,v)
+					end
 				end
 			end
 		elseif GetConVarNumber("ai_ignoreplayers") == 0 && v:IsPlayer() && v:Alive() then
@@ -1777,7 +1779,9 @@ function ENT:UpdateFriends()
 				if v.Faction != "FACTION_NOTARGET" && (self:GetFaction() == "FACTION_PLAYER" || v.Faction == self.Faction || self.FriendlyToPlayers == true) && !table.HasValue(self.tbl_AddToEnemies,v) then
 					self:SetRelationship(v,D_LI,true)
 					self:OnSpottedFriendly(v)
-					UpdateTableList(self.tbl_FriendMemory,v)
+					if not table.HasValue(self.tbl_FriendMemory,v) then
+						table.insert(self.tbl_FriendMemory,v)
+					end
 				end
 			end
 		end

@@ -51,7 +51,7 @@ if CLIENT then
 		panel:ControlHelp("1 = Easy, 2 = Normal, 3 = Hard, 4 = Hell (Only effects base values. Mods with custom functions will need to be updated by the mod owner)")
 		panel:AddControl("Label",{Text = "Cpt. Hazama"})
 	end
-	function CPTBaseMenu_Add()
+	local function CPTBaseMenu_Add()
 		spawnmenu.AddToolMenuOption("Options","CPTBase","SNPC AI Settings","SNPC AI Settings","","",CPTBaseMenu_SNPC) -- Tab, Dropdown, Select, Title
 	end
 	hook.Add("PopulateToolMenu","CPTBaseMenu_Add",CPTBaseMenu_Add)
